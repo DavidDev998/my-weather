@@ -1,0 +1,52 @@
+import { StyleSheet } from "react-native";
+
+export default StyleSheet.create({
+    container:{
+        position:'relative',
+        width:115,
+        height:115,
+        marginBottom:20,
+        backgroundColor:'#263089',
+        borderRadius:20,
+        padding:8
+    },
+    title:{
+        width:'100%',
+        color:'rgba(255, 255, 255, 0.7)',
+        fontSize:14,
+    },
+    valueContainer:{
+        position:'relative',
+        width:'auto',
+        height:'auto',
+        alignItems:'center',
+        paddingHorizontal:10,
+    },
+    reducedValue:{
+        color:'white',
+        fontSize:30,
+        fontWeight:'400',
+        paddingVertical:10,
+        marginTop:10,
+    },
+    value:{
+        width:'auto',
+        color:'white',
+        fontSize:40,
+        fontWeight:'400',
+        padding:5,
+        marginTop:5
+    },
+    suffix:{
+        position:'absolute',
+        top:0,
+        right:0,
+        color:'white',
+        fontSize:15
+    },
+    icon:{
+        position:'absolute',
+        bottom:0,
+        right:0,
+    }
+})

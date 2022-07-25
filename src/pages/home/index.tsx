@@ -1,10 +1,18 @@
 import React,{useState,useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
+import { Text, View,SafeAreaView, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
-import weatherService from '../../services/weather';
 import LinearGradient from 'react-native-linear-gradient';
-import Clear from '../../../assets/images/clear.svg'
+
+import hourOfDay from '../../types/hourOfDay';
+
+import weatherService from '../../services/weather';
+import WeatherImage from '../../components/WeatherImage'
+import getCountryByPrefix from '../../utils/getCountry';
+import MiniCard from '../../components/MiniCard';
+
+import LocationIcon from '../../../assets/images/location.svg';
+import ReloadIcon from '../../../assets/icons/reload.svg';
 
 import styles from './styles';
 
@@ -14,35 +22,38 @@ const backgrounds:any = {
   "night":['#010446','#0066FF'],
 }
 
-const icons = {
-  'sunny':'sunny.svg',
-  'clear':'clear.svg',
-  'cloudy':'cloudy.svg',
-  'rain':'rain.svg',
-  'thunder':'thunder.svg',
-  'heavyRain':'heavyRain.svg',
-
-  'nightCloudy':'nightCloudy.svg',
-  'nigth':'night.svg',
-  'clearNight':'clearNight.svg',
-  'nightRain':'nightRain.svg'
+const weathers:any = {
+  "Thunderstorm":"Tempestade",
+  "Drizzie":"Chuva Leve",
+  "Rain":"Chuva",
+  "Snow":"Neve",
+  "Clear":"Céu Limpo",
+  "Clouds":"Nublado",
+  "Mist":"Névoa",
+  "Smoke":"Fumaça",
+  "Haze":"Neblina",
+  "Dust":"Poeira",
+  "Fog":"Nevoeiro",
+  "Sand":"Areia",
+  "Ash":"Cinzas",
+  "Squall":"Rajadas",
+  "Tornado":"Tornado",
 }
 
 export default function Home() {
-  const [location, setLocation] = useState({});
-  const [weather, setWeather] = useState({});
-  const [hourOfDay, setHourOfDay] = useState('day');
+  const [weather, setWeather]:any = useState({});
+  const [hourOfDay, setHourOfDay] = useState<hourOfDay>('day');
   const [errorMsg, setErrorMsg] = useState('');
+  const [reload,setReload] = useState(false);
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('A permissão para acessar a localização foi negada');
+        setErrorMsg('A permissão para acessar a localização foi negada, por favor, permita em suas configurações para usar o app!');
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
 
       let weatherData = await weatherService.currentWeather(location.coords.latitude,location.coords.longitude);
       setWeather(weatherData)
@@ -62,37 +73,68 @@ export default function Home() {
         //Noite
         setHourOfDay('night')
       }
-      
+
+      setReload(false)
     })();
-  }, []);
-
-  let locationText = 'Waiting..';
-  if (errorMsg) {
-    locationText = errorMsg;
-  } else if (location) {
-    locationText = JSON.stringify(location);
-  }
-
-  let weatherText = `Waiting...`
-  if(weather){
-    weatherText = JSON.stringify(weather)
-  }
+  }, [reload]);
 
   return (
-    <LinearGradient
-      colors={backgrounds[hourOfDay]}
-      style={styles.container}
-      start={{x:0,y:0}}
-      end={{x:1,y:1}}
-    >
-      <Text style={styles.text}>Location</Text>
-      <Text style={styles.text}>{locationText}</Text>
-    <Clear/>
-      <Text style={styles.text2}>Clima</Text>
-      <Text style={styles.text}>{weatherText}</Text>
-      <Text>{backgrounds[hourOfDay]}</Text>
-      <StatusBar style="auto" />
-    </LinearGradient>
+      <LinearGradient
+        colors={backgrounds[hourOfDay]}
+        style={styles.container}
+        start={{x:0,y:0}}
+        end={{x:1,y:1}}
+      >
+        {
+          weather.weather && !reload && !errorMsg ?
+          (
+            <>
+              <Pressable onPress={()=>{setReload(true)}} style={styles.reload}>
+                <ReloadIcon/>
+              </Pressable>
+              <View style={styles.nameContainer}>
+                <LocationIcon style={styles.locationIcon}/>
+                <Text style={styles.city}>{weather.name ?? ""}</Text>
+              </View>
+              <Text style={styles.country}>{getCountryByPrefix(weather?.sys?.country ?? "")}</Text>
+              <View style={styles.latLongContainer}>
+                <Text style={styles.lat}>lat:{weather?.coord?.lat ?? ""}</Text>
+                <Text style={styles.long}>long:{weather?.coord?.lon ?? ""}</Text>
+              </View>
+
+              <WeatherImage type={weather?.weather ? weather?.weather[0]?.main : ""} hourOfDay={hourOfDay}/>
+
+              <View style={styles.tempContainer}>
+                <Text style={styles.temp}>{parseInt(weather?.main?.temp)}</Text>
+                <Text style={styles.celciusSymbol}>°C</Text>
+              </View>
+              <Text style={styles.weatherDescription}>{weathers[weather?.weather ? weather?.weather[0]?.main : ""]}</Text>
+              <View style={styles.divisorbar}></View>
+
+
+              <View style={styles.cards}>
+                <MiniCard icon='temp' name='Minima' suffix='°C' value={parseInt(weather?.main?.temp_min ?? 0)}/>
+                <MiniCard icon='temp' name='Sensação' suffix='°C' value={parseInt(weather?.main?.feels_like ?? 0)}/>
+                <MiniCard icon='temp' name='Máxima' suffix='°C' value={parseInt(weather?.main?.temp_max ?? 0)}/>
+
+                <MiniCard icon='humidity' name='Umidade' suffix='%' value={parseInt(weather?.main?.humidity ?? 0)}/>
+                <MiniCard icon='temp' name='Vento' suffix='km/h' value={parseInt(weather?.main?.temp_max ?? 0)}/>
+                <MiniCard icon='temp' name='Pressão' suffix='hPa' value={parseInt(weather?.main?.pressure ?? 0)}/>
+              </View>
+              
+              <StatusBar style='light' />
+            </>
+          ) : 
+          (
+            errorMsg ?
+            (
+              <Text style={styles.errorText}>{errorMsg}</Text>
+            ) : (
+              <ActivityIndicator size="large" />
+            )
+          )
+        }
+      </LinearGradient>
   );
 }
  
