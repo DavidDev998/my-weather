@@ -7,12 +7,12 @@ export default StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingTop:100,
+        paddingTop:'10%',
         paddingHorizontal:20
     },
     reload:{
         position:'absolute',
-        top:60,
+        top:'5%',
         left:10
     },
     nameContainer:{
@@ -57,7 +57,7 @@ export default StyleSheet.create({
     },
     temp:{
         color:'white',
-        fontSize:68,
+        fontSize:50,
         fontWeight:'400',
         padding:5
     },
