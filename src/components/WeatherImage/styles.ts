@@ -1,13 +1,12 @@
 import { StyleSheet } from "react-native";
-import { Dimensions } from 'react-native';
+import { Dimensions } from "react-native";
 
-console.log(Dimensions.get('window'))
+const height = Dimensions.get('window').height
 
 export default StyleSheet.create({
     image:{
-       
-        width:100,
-        height:100,
+        width:(height < 700) ? 100 : 190,
+        height:(height < 700) ? 100 : 190,
 
     }
 })

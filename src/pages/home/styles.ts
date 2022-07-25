@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { Dimensions } from 'react-native';
 
-console.log(Dimensions.get('window'))
+const height = Dimensions.get('window').height
 
 export default StyleSheet.create({
     container: {
@@ -19,7 +19,9 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     middle:{
-        flex:.3
+        flex:height < 700 ? .3 : .4,
+        justifyContent:'center',
+        alignItems:'center'
 
     },
     bottom:{
