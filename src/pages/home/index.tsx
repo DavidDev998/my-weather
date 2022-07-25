@@ -59,7 +59,6 @@ export default function Home() {
       let location = {} 
       Geolocation.getCurrentPosition(async info => {
         let location = info
-        console.log(location)
         let weatherData = await weatherService.currentWeather(location.coords.latitude,location.coords.longitude);
         setWeather(weatherData)
 
@@ -102,35 +101,45 @@ export default function Home() {
               <Pressable onPress={()=>{setReload(true)}} style={styles.reload}>
                 <ReloadIcon/>
               </Pressable>
-              <View style={styles.nameContainer}>
-                <LocationIcon style={styles.locationIcon}/>
-                <Text style={styles.city}>{weather.name ?? ""}</Text>
+              <View style={styles.top}>
+                <View style={styles.nameContainer}>
+                  <LocationIcon style={styles.locationIcon}/>
+                  <Text style={styles.city}>{weather.name ?? ""}</Text>
+                </View>
+                <Text style={styles.country}>{getCountryByPrefix(weather?.sys?.country ?? "")}</Text>
+                <View style={styles.latLongContainer}>
+                  <Text style={styles.lat}>lat:{weather?.coord?.lat ?? ""}</Text>
+                  <Text style={styles.long}>long:{weather?.coord?.lon ?? ""}</Text>
+                </View>
               </View>
-              <Text style={styles.country}>{getCountryByPrefix(weather?.sys?.country ?? "")}</Text>
-              <View style={styles.latLongContainer}>
-                <Text style={styles.lat}>lat:{weather?.coord?.lat ?? ""}</Text>
-                <Text style={styles.long}>long:{weather?.coord?.lon ?? ""}</Text>
-              </View>
+              <View style={styles.middle}>
+                <WeatherImage type={weather?.weather ? weather?.weather[0]?.main : ""} hourOfDay={hourOfDay}/>
 
-              <WeatherImage type={weather?.weather ? weather?.weather[0]?.main : ""} hourOfDay={hourOfDay}/>
-
-              <View style={styles.tempContainer}>
-                <Text style={styles.temp}>{parseInt(weather?.main?.temp)}</Text>
-                <Text style={styles.celciusSymbol}>°C</Text>
+                <View style={styles.tempContainer}>
+                  <Text style={styles.temp}>{parseInt(weather?.main?.temp)}</Text>
+                  <Text style={styles.celciusSymbol}>°C</Text>
+                </View>
+                <Text style={styles.weatherDescription}>{weathers[weather?.weather ? weather?.weather[0]?.main : ""]}</Text>
               </View>
-              <Text style={styles.weatherDescription}>{weathers[weather?.weather ? weather?.weather[0]?.main : ""]}</Text>
               <View style={styles.divisorbar}></View>
+              <View style={styles.bottom}>
+                <View style={styles.cards}>
+                  <MiniCard icon='temp' name='Minima' suffix='°C' value={parseInt(weather?.main?.temp_min ?? 0)}/>
+                  <MiniCard icon='temp' name='Sensação' suffix='°C' value={parseInt(weather?.main?.feels_like ?? 0)}/>
+                  <MiniCard icon='temp' name='Máxima' suffix='°C' value={parseInt(weather?.main?.temp_max ?? 0)}/>
 
-
-              <View style={styles.cards}>
-                <MiniCard icon='temp' name='Minima' suffix='°C' value={parseInt(weather?.main?.temp_min ?? 0)}/>
-                <MiniCard icon='temp' name='Sensação' suffix='°C' value={parseInt(weather?.main?.feels_like ?? 0)}/>
-                <MiniCard icon='temp' name='Máxima' suffix='°C' value={parseInt(weather?.main?.temp_max ?? 0)}/>
-
-                <MiniCard icon='humidity' name='Umidade' suffix='%' value={parseInt(weather?.main?.humidity ?? 0)}/>
-                <MiniCard icon='temp' name='Vento' suffix='km/h' value={parseInt(weather?.main?.temp_max ?? 0)}/>
-                <MiniCard icon='temp' name='Pressão' suffix='hPa' value={parseInt(weather?.main?.pressure ?? 0)}/>
+                  <MiniCard icon='humidity' name='Umidade' suffix='%' value={parseInt(weather?.main?.humidity ?? 0)}/>
+                  <MiniCard icon='temp' name='Vento' suffix='km/h' value={parseInt(weather?.main?.temp_max ?? 0)}/>
+                  <MiniCard icon='temp' name='Pressão' suffix='hPa' value={parseInt(weather?.main?.pressure ?? 0)}/>
+                </View>
               </View>
+             
+
+              
+              
+
+
+              
               
               <StatusBar style='light' />
             </>

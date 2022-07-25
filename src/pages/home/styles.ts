@@ -1,4 +1,7 @@
 import { StyleSheet } from "react-native";
+import { Dimensions } from 'react-native';
+
+console.log(Dimensions.get('window'))
 
 export default StyleSheet.create({
     container: {
@@ -9,6 +12,19 @@ export default StyleSheet.create({
         justifyContent: 'flex-start',
         paddingTop:'10%',
         paddingHorizontal:20
+    },
+    top:{
+        flex:.2,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    middle:{
+        flex:.3
+
+    },
+    bottom:{
+        flex:.3
+
     },
     reload:{
         position:'absolute',
