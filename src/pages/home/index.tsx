@@ -67,11 +67,10 @@ export default function Home() {
         const sunset = new Date(weatherData.sys.sunset * 1000).getHours()
         const evening = 17
         const sunrise = new Date(weatherData.sys.sunrise * 1000).getHours()
-        
-        if(now > sunrise && now < evening){
+        if(now >= sunrise && now < evening){
           //Dia
           setHourOfDay('day')
-        }else if(now > evening && now < sunset){
+        }else if(now >= evening && now < sunset){
           //Tarde
           setHourOfDay('evening')
         }else{
