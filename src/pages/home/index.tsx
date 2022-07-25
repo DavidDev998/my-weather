@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Text, View,SafeAreaView, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
 import LinearGradient from 'react-native-linear-gradient';
+import Geolocation from '@react-native-community/geolocation';
 
 import hourOfDay from '../../types/hourOfDay';
 
@@ -45,6 +46,7 @@ export default function Home() {
   const [hourOfDay, setHourOfDay] = useState<hourOfDay>('day');
   const [errorMsg, setErrorMsg] = useState('');
   const [reload,setReload] = useState(false);
+  const [enableHighAccuracy,setEnableHighAccuracy] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -53,30 +55,39 @@ export default function Home() {
         setErrorMsg('A permissão para acessar a localização foi negada, por favor, permita em suas configurações para usar o app!');
         return;
       }
-      let location = await Location.getCurrentPositionAsync({});
-
-      let weatherData = await weatherService.currentWeather(location.coords.latitude,location.coords.longitude);
-      setWeather(weatherData)
-
-      const now = new Date().getHours();
-      const sunset = new Date(weatherData.sys.sunset * 1000).getHours()
-      const evening = 17
-      const sunrise = new Date(weatherData.sys.sunrise * 1000).getHours()
       
-      if(now > sunrise && now < evening){
-        //Dia
-        setHourOfDay('day')
-      }else if(now > evening && now < sunset){
-        //Tarde
-        setHourOfDay('evening')
-      }else{
-        //Noite
-        setHourOfDay('night')
-      }
+      let location = {} 
+      Geolocation.getCurrentPosition(async info => {
+        let location = info
+        console.log(location)
+        let weatherData = await weatherService.currentWeather(location.coords.latitude,location.coords.longitude);
+        setWeather(weatherData)
 
-      setReload(false)
+        const now = new Date().getHours();
+        const sunset = new Date(weatherData.sys.sunset * 1000).getHours()
+        const evening = 17
+        const sunrise = new Date(weatherData.sys.sunrise * 1000).getHours()
+        
+        if(now > sunrise && now < evening){
+          //Dia
+          setHourOfDay('day')
+        }else if(now > evening && now < sunset){
+          //Tarde
+          setHourOfDay('evening')
+        }else{
+          //Noite
+          setHourOfDay('night')
+        }
+        setReload(false)
+      },err => {
+        console.log(err)
+        setEnableHighAccuracy(false);
+        setReload(true)
+      },
+      {enableHighAccuracy:enableHighAccuracy,timeout:2000});
+      
     })();
-  }, [reload]);
+  }, [,reload]);
 
   return (
       <LinearGradient
