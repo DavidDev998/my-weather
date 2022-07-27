@@ -39,7 +39,24 @@ Verificar a instalação do [nodeJS](https://nodejs.org/en/download/), do [types
   
   ##O emulador deve estar executando ou o celular conectado##
 ```
+## App
 
-<img width="390" alt="Captura de Tela 2022-07-25 às 17 49 51" src="https://user-images.githubusercontent.com/60728248/181107836-1271fad0-c874-4794-a5d2-116b1b2954b4.png">
-<img width="392" alt="Captura de Tela 2022-07-25 às 18 20 02" src="https://user-images.githubusercontent.com/60728248/181107880-6495f379-002a-4e26-9f3f-fa6980289132.png">
-<img width="390" alt="Captura de Tela 2022-07-25 às 18 20 49" src="https://user-images.githubusercontent.com/60728248/181107887-59359034-5f70-4827-b1db-617885c4f38e.png">
+O Aplicativo muda a interface de acordo com a hora do dia:
+
+**Dia**
+
+![image 3 (1)](https://user-images.githubusercontent.com/60728248/181136430-7adec93f-2f5b-4b62-883a-ba477f10e0c1.png)
+
+
+**Tarde**
+
+![image 1 (1)](https://user-images.githubusercontent.com/60728248/181136416-0311c541-8c98-4c17-a191-ec1183da43d3.png)
+
+
+**Noite**
+
+![image 2 (1)](https://user-images.githubusercontent.com/60728248/181136423-478288e1-6673-4ac0-9ca1-816b6cc80520.png)
+
+
+
+
